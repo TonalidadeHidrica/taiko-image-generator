@@ -1,0 +1,41 @@
+-size 195x195
+xc:transparent
+
+-affine "1, 0, 0, 1, 97.5, 97.5"
+
+-strokewidth 3
+-stroke "#000000"
+-fill "#f7eedb"
+-draw "circle 0, 0, 50, 0"
+
+-stroke none
+-fill "#f8b700"
+-draw "circle 0, 0, 39, 0"
+
+-strokewidth 2
+-stroke "#000000"
+-fill none
+-draw "ellipse 9.52, 10, 8.5, 7.3, 17.19, 180"
+-draw "ellipse -9.52, 10, 8.5, 7.3, 0, 162.81"
+
+# -stroke none
+-strokewidth 2.8
+-fill "#000000"
+-draw "ellipse -22, -4, 6.56, 7, 0, 360"
+-draw "ellipse 22, -4, 6.56, 7, 0, 360"
+
+(
+ +clone
+ -background black
+ -shadow 80x2+2+2
+ -crop 97.5x195+0+0
+)
++swap
+-background none
+-flatten
++repage
+
+-crop 195x195+0+0
++repage
+
+-write target/note_renda_1.png
