@@ -1,0 +1,46 @@
+-size 195x195
+xc:transparent
+
+-affine "1, 0, 0, 1, 97.5, 97.5"
+
+-strokewidth 3
+-stroke "#000000"
+-fill "#f7eedb"
+-draw "circle 0, 0, 77, 0"
+
+-stroke none
+-fill "#68c0c0"  # "#f84828"
+-draw "circle 0, 0, 60, 0"
+
+-strokewidth 2
+-stroke "#000000"
+-fill none
+-draw "ellipse  13, 15, 12.75, 10.95, 17.19, 180"
+-draw "ellipse -13, 15, 12.75, 10.95, 0, 162.81"
+# -draw "ellipse  18, -9, 18, 12, 17.19, 180"
+# -draw "ellipse -18, -9, 18, 12, 0, 162.81"
+
+-strokewidth 2.8
+-fill "#000000"
+-draw "arc -24, -16.5, -46, 6, -10, 230"
+-draw "arc  24, -16.5,  46, 6, -50, 190"
+
+-strokewidth 2
+-stroke "#000000"
+-draw "line  20, -14,  27, -27"
+-draw "line -20, -14, -27, -27"
+
+(
+ +clone
+ -background black
+ -shadow 80x2+2+2
+)
++swap
+-background none
+-flatten
++repage
+
+-crop 195x195+0+0
++repage
+
+-write target/note_large.png

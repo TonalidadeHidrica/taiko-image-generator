@@ -18,14 +18,17 @@ xc:transparent
 -stroke "#646464"
 -fill none
 -draw "circle 617.5, 385.5, 617.5, 462.5"
+# r = 67
 
 -strokewidth 4
 -stroke "#8C8C8C"
 -fill none
 -draw "circle 617.5, 385.5, 617.5, 435.5"
+# r = 50
 
 -stroke none
 -fill "#525252"
 -draw "circle 617.5, 385.5, 617.5, 424.5"
+# r = 39
 
 -write target/res.png
