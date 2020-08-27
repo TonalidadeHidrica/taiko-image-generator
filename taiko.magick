@@ -1,0 +1,31 @@
+-size 1920x1080
+xc:transparent
+
+-stroke none
+-fill black
+-draw "rectangle 0, 276, 1920, 539" # 540
+
+-fill "#b30000"
+-draw "rectangle 0, 288, 491, 527" # 492, 528
+
+-fill "#282828"
+-draw "rectangle 498, 288, 1920, 482"  # 483
+
+-fill "#848484"
+-draw "rectangle 498, 489, 1920, 527" # 528
+
+-strokewidth 4
+-stroke "#646464"
+-fill none
+-draw "circle 617.5, 385.5, 617.5, 462.5"
+
+-strokewidth 4
+-stroke "#8C8C8C"
+-fill none
+-draw "circle 617.5, 385.5, 617.5, 435.5"
+
+-stroke none
+-fill "#525252"
+-draw "circle 617.5, 385.5, 617.5, 424.5"
+
+-write target/res.png
