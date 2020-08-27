@@ -27,26 +27,32 @@ fn main() -> Result<(), CustomError> {
     create_dir_all(output_dir)?;
 
     magick_wand_genesis();
-    create_background(output_dir);
+    create_background(output_dir)?;
     Ok(())
 }
 
 fn create_background<P>(output_dir: P) -> Result<(), CustomError>
-where
-    P: AsRef<Path>,
+    where
+        P: AsRef<Path>,
 {
     let wand = MagickWand::new();
     wand.set_size(1920, 1080)?;
     wand.read_image("xc:transparent")?;
     let mut drawing_wand = DrawingWand::new();
-    drawing_wand.set_stroke_color("none");
+    drawing_wand.set_stroke_color(&get_color("none")?);
 
     wand.write_image(
         output_dir
-            .into()
+            .as_ref()
             .join("test1.png")
             .to_str()
             .ok_or("File path not converted successfully")?,
     )?;
     Ok(())
+}
+
+fn get_color(color: &str) -> Result<PixelWand, &'static str> {
+    let mut pixel_wand = PixelWand::new();
+    pixel_wand.set_color(color)?;
+    Ok(pixel_wand)
 }
