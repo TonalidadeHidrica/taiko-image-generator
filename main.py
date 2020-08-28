@@ -24,14 +24,16 @@ def main():
 
     output_dir = Path("output")
 
-    # draw_background(colors, draw, output_dir / "game_bg.png")
-    for is_don in (False, True):
-        for is_large in (False, True):
-            draw_note(colors,
-                      output_dir / f"note_"
-                                   f"{'don' if is_don else 'ka'}"
-                                   f"{'_large' if is_large else ''}.png",
-                      is_don, is_large)
+    # draw_background(colors, output_dir / "game_bg.png")
+    # for is_don in (False, True):
+    #     for is_large in (False, True):
+    #         draw_note(colors,
+    #                   output_dir / f"note_"
+    #                                f"{'don' if is_don else 'ka'}"
+    #                                f"{'_large' if is_large else ''}.png",
+    #                   is_don, is_large)
+    for is_large in (False, True):
+        draw_renda(colors, output_dir, is_large)
 
 
 def draw_background(colors: Colors, output_file: Path):
@@ -70,41 +72,8 @@ def draw_background(colors: Colors, output_file: Path):
 
 def draw_note(colors: Colors, output_file: Path, is_don: bool, is_large: bool):
     with Drawing() as draw:
-        draw.affine([1, 0, 0, 1, 97.5, 97.5])
-
-        draw.stroke_width = 3
-        draw.stroke_color = colors.black
-        draw.fill_color = colors.get_color("#f7eedb")
-        draw.circle((0, 0), (77 if is_large else 50, 0))
-
-        draw.stroke_color = colors.none
-        draw.fill_color = colors.get_color("#f84828" if is_don else "#68c0c0")
-        draw.circle((0, 0), (60 if is_large else 39, 0))
-
-        draw.stroke_color = colors.black
-        draw.stroke_width = 2
-        draw.fill_color = colors.none
-        for i in (1, -1):
-            origin = (i * 13, 15) if is_large else (i * 9.52, 10)
-            radius = (12.75, 10.95) if is_large else (8.5, 7.3)
-            delta = 0.3 * 180 / pi
-            rotation = (delta, 180) if i == 1 else (0, 180 - delta)
-            draw.ellipse(origin, radius, rotation)
-
-        draw.stroke_width = 2.8
-        draw.fill_color = colors.black
-        for i in (1, -1):
-            if is_large:
-                degree = (-10, 230) if i == -1 else (-50, 190)
-                draw.arc((i * 24, -16.5), (i * 46, 6), degree)
-            else:
-                draw.ellipse((i * 22, -4), (6.56, 7))
-
-        if is_large:
-            draw.stroke_width = 2
-            draw.stroke_color = colors.black
-            for i in (1, -1):
-                draw.line((i * 20, -14), (i * 27, -27))
+        draw_note_face(colors, draw,
+                       colors.get_color("#f84828" if is_don else "#68c0c0"), is_large)
 
         with Image(width=195, height=195, pseudo="xc:transparent") as image:
             draw.draw(image)
@@ -112,10 +81,88 @@ def draw_note(colors: Colors, output_file: Path, is_don: bool, is_large: bool):
             with image.clone() as shadow_layer:
                 shadow_layer.background_color = colors.black
                 shadow_layer.shadow(80, 2, 2, 2)
-
-                shadow_layer.composite(image)
                 shadow_layer.crop(width=195, height=195, left=0, top=0)
-                shadow_layer.save(filename=output_file)
+
+                image.composite(shadow_layer)
+                image.save(filename=output_file)
+
+
+def draw_renda(colors: Colors, output_dir: Path, is_large: bool):
+    renda_color = colors.get_color("#f8b700")
+    filename_base = f"renda{'_large' if is_large else ''}"
+
+    with Drawing() as draw:
+        draw_note_face(colors, draw, renda_color, is_large)
+
+        with Image(width=195, height=195, pseudo="xc:transparent") as image:
+            draw.draw(image)
+
+            with image.clone() as shadow_layer:
+                shadow_layer.background_color = colors.black
+                shadow_layer.shadow(80, 2, 2, 2)
+                shadow_layer.crop(width=195 // 2, height=195, left=0, top=0)
+
+                image.composite(shadow_layer, operator="dst_over")
+                image.save(filename=output_dir / f"{filename_base}_left.png")
+
+    with Drawing() as draw:
+        draw.affine([1, 0, 0, 1, 97.5, 97.5])
+
+        draw.stroke_width = 3
+        draw.stroke_color = colors.black
+        draw.fill_color = renda_color
+        size = 77 if is_large else 50
+        draw.rectangle(-size, -size, 195 + size, size, radius=size)
+
+        with Image(width=390, height=195, pseudo="xc:transparent") as image:
+            draw.draw(image)
+
+            with image.clone() as shadow_layer:
+                shadow_layer.background_color = colors.black
+                shadow_layer.background_color = colors.black
+                shadow_layer.shadow(80, 2, 2, 2)
+
+                image.composite(shadow_layer, operator="dst_over")
+                image.crop(width=195, height=195, left=195, top=0)
+                image.save(filename=output_dir / f"{filename_base}_right.png")
+
+
+def draw_note_face(colors: Colors, draw: Drawing, face_color: Color, is_large: bool):
+    draw.affine([1, 0, 0, 1, 97.5, 97.5])
+
+    draw.stroke_width = 3
+    draw.stroke_color = colors.black
+    draw.fill_color = colors.get_color("#f7eedb")
+    draw.circle((0, 0), (77 if is_large else 50, 0))
+
+    draw.stroke_color = colors.none
+    draw.fill_color = face_color
+    draw.circle((0, 0), (60 if is_large else 39, 0))
+
+    draw.stroke_color = colors.black
+    draw.stroke_width = 2
+    draw.fill_color = colors.none
+    for i in (1, -1):
+        origin = (i * 13, 15) if is_large else (i * 9.52, 10)
+        radius = (12.75, 10.95) if is_large else (8.5, 7.3)
+        delta = 0.3 * 180 / pi
+        rotation = (delta, 180) if i == 1 else (0, 180 - delta)
+        draw.ellipse(origin, radius, rotation)
+
+    draw.stroke_width = 2.8
+    draw.fill_color = colors.black
+    for i in (1, -1):
+        if is_large:
+            degree = (-10, 230) if i == -1 else (-50, 190)
+            draw.arc((i * 24, -16.5), (i * 46, 6), degree)
+        else:
+            draw.ellipse((i * 22, -4), (6.56, 7))
+
+    if is_large:
+        draw.stroke_width = 2
+        draw.stroke_color = colors.black
+        for i in (1, -1):
+            draw.line((i * 20, -14), (i * 27, -27))
 
 
 if __name__ == '__main__':
