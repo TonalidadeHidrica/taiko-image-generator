@@ -24,14 +24,14 @@ def main():
 
     output_dir = Path("output")
 
-    # draw_background(colors, output_dir / "game_bg.png")
-    # for is_don in (False, True):
-    #     for is_large in (False, True):
-    #         draw_note(colors,
-    #                   output_dir / f"note_"
-    #                                f"{'don' if is_don else 'ka'}"
-    #                                f"{'_large' if is_large else ''}.png",
-    #                   is_don, is_large)
+    draw_background(colors, output_dir / "game_bg.png")
+    for is_don in (False, True):
+        for is_large in (False, True):
+            draw_note(colors,
+                      output_dir / f"note_"
+                                   f"{'don' if is_don else 'ka'}"
+                                   f"{'_large' if is_large else ''}.png",
+                      is_don, is_large)
     for is_large in (False, True):
         draw_renda(colors, output_dir, is_large)
 
@@ -83,7 +83,7 @@ def draw_note(colors: Colors, output_file: Path, is_don: bool, is_large: bool):
                 shadow_layer.shadow(80, 2, 2, 2)
                 shadow_layer.crop(width=195, height=195, left=0, top=0)
 
-                image.composite(shadow_layer)
+                image.composite(shadow_layer, operator="dst_over")
                 image.save(filename=output_file)
 
 
