@@ -1,6 +1,7 @@
 from math import pi
 from pathlib import Path
 
+import toml
 from wand.color import Color
 from wand.drawing import Drawing
 from wand.image import Image
@@ -23,6 +24,10 @@ def main():
     colors = Colors()
 
     output_dir = Path("output")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    with open("config.toml") as f:
+        config = toml.load(f)
 
     draw_background(colors, output_dir / "game_bg.png")
     for is_don in (False, True):
@@ -34,6 +39,8 @@ def main():
                       is_don, is_large)
     for is_large in (False, True):
         draw_renda(colors, output_dir, is_large)
+    for (i, text) in enumerate(["good", "ok", "bad"]):
+        create_judge_text(config["judge_text"], output_dir / f"judge_text_{text}.png", i)
 
 
 def draw_background(colors: Colors, output_file: Path):
@@ -163,6 +170,13 @@ def draw_note_face(colors: Colors, draw: Drawing, face_color: Color, is_large: b
         draw.stroke_color = colors.black
         for i in (1, -1):
             draw.line((i * 20, -14), (i * 27, -27))
+
+
+def create_judge_text(original_file: str, output_file: Path, i: int):
+    with Image(filename=original_file) as image:
+        image.crop(width=90, height=60, left=0, top=i * 60)
+        image.scale(columns=135, rows=90)
+        image.save(filename=output_file)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,13 @@
 [[package]]
 category = "main"
+description = "Python Library for Tom's Obvious, Minimal Language"
+name = "toml"
+optional = false
+python-versions = "*"
+version = "0.10.1"
+
+[[package]]
+category = "main"
 description = "Ctypes-based simple MagickWand API binding for Python"
 name = "wand"
 optional = false
@@ -11,11 +19,15 @@ doc = ["Sphinx (>=2.4.1)"]
 test = ["pytest (>=5.3.5)"]
 
 [metadata]
-content-hash = "e5a392ddc7ef26485a378cddbb061580f63cb4ba57e8431bbfaeaf969a66aad3"
+content-hash = "d6b9dcce6cb0ea5922aacfadb85f99fe7ddb904eb83858a4b68bcaf06503645c"
 lock-version = "1.0"
 python-versions = "^3.8"
 
 [metadata.files]
+toml = [
+    {file = "toml-0.10.1-py2.py3-none-any.whl", hash = "sha256:bda89d5935c2eac546d648028b9901107a595863cb36bae0c73ac804a9b4ce88"},
+    {file = "toml-0.10.1.tar.gz", hash = "sha256:926b612be1e5ce0634a2ca03470f95169cf16f939018233a670519cb4ac58b0f"},
+]
 wand = [
     {file = "Wand-0.6.2-py2.py3-none-any.whl", hash = "sha256:b56b96189df2ac3db586afdc6ba67ca37c886d234c3fd98d94172f03248a8e3b"},
     {file = "Wand-0.6.2.tar.gz", hash = "sha256:65440e478b595aaa18483e25091adacf6d4458c49c2fd8d59e0fd44a7393a14a"},
