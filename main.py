@@ -1,3 +1,4 @@
+import shutil
 from math import pi
 from pathlib import Path
 
@@ -30,23 +31,24 @@ def main():
         config = toml.load(f)
 
     draw_background(colors, output_dir / "game_bg.png")
-    # for is_don in (False, True):
-    #     for is_large in (False, True):
-    #         draw_note(colors,
-    #                   output_dir / f"note_"
-    #                                f"{'don' if is_don else 'ka'}"
-    #                                f"{'_large' if is_large else ''}.png",
-    #                   is_don, is_large)
-    # for is_large in (False, True):
-    #     draw_renda(colors, output_dir, is_large)
-    # for (i, text) in enumerate(["good", "ok", "bad"]):
-    #     create_judge_text(config["judge_text"], output_dir / f"judge_text_{text}.png", i)
-    # for color in ["white", "silver", "gold"]:
-    #     for i in range(10):
-    #         with Image(filename=config[f"combo_{color}"]) as image:
-    #             image.crop(width=664 * (i + 1) // 10 - 664 * i // 10, height=77, left=664 * i // 10, top=0)
-    #             image.save(filename=output_dir / f"combo_number_{color}_{i}.png")
+    for is_don in (False, True):
+        for is_large in (False, True):
+            draw_note(colors,
+                      output_dir / f"note_"
+                                   f"{'don' if is_don else 'ka'}"
+                                   f"{'_large' if is_large else ''}.png",
+                      is_don, is_large)
+    for is_large in (False, True):
+        draw_renda(colors, output_dir, is_large)
+    for (i, text) in enumerate(["good", "ok", "bad"]):
+        create_judge_text(config["judge_text"], output_dir / f"judge_text_{text}.png", i)
+    for color in ["white", "silver", "gold"]:
+        for i in range(10):
+            with Image(filename=config[f"combo_{color}"]) as image:
+                image.crop(width=664 * (i + 1) // 10 - 664 * i // 10, height=77, left=664 * i // 10, top=0)
+                image.save(filename=output_dir / f"combo_number_{color}_{i}.png")
     draw_gauge(colors, output_dir)
+    shutil.copy(config["soul"], output_dir / "gauge_soul.png")
 
 
 def draw_background(colors: Colors, output_file: Path):
