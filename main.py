@@ -30,22 +30,23 @@ def main():
         config = toml.load(f)
 
     draw_background(colors, output_dir / "game_bg.png")
-    for is_don in (False, True):
-        for is_large in (False, True):
-            draw_note(colors,
-                      output_dir / f"note_"
-                                   f"{'don' if is_don else 'ka'}"
-                                   f"{'_large' if is_large else ''}.png",
-                      is_don, is_large)
-    for is_large in (False, True):
-        draw_renda(colors, output_dir, is_large)
-    for (i, text) in enumerate(["good", "ok", "bad"]):
-        create_judge_text(config["judge_text"], output_dir / f"judge_text_{text}.png", i)
-    for color in ["white", "silver", "gold"]:
-        for i in range(10):
-            with Image(filename=config[f"combo_{color}"]) as image:
-                image.crop(width=664 * (i + 1) // 10 - 664 * i // 10, height=77, left=664 * i // 10, top=0)
-                image.save(filename=output_dir / f"combo_number_{color}_{i}.png")
+    # for is_don in (False, True):
+    #     for is_large in (False, True):
+    #         draw_note(colors,
+    #                   output_dir / f"note_"
+    #                                f"{'don' if is_don else 'ka'}"
+    #                                f"{'_large' if is_large else ''}.png",
+    #                   is_don, is_large)
+    # for is_large in (False, True):
+    #     draw_renda(colors, output_dir, is_large)
+    # for (i, text) in enumerate(["good", "ok", "bad"]):
+    #     create_judge_text(config["judge_text"], output_dir / f"judge_text_{text}.png", i)
+    # for color in ["white", "silver", "gold"]:
+    #     for i in range(10):
+    #         with Image(filename=config[f"combo_{color}"]) as image:
+    #             image.crop(width=664 * (i + 1) // 10 - 664 * i // 10, height=77, left=664 * i // 10, top=0)
+    #             image.save(filename=output_dir / f"combo_number_{color}_{i}.png")
+    draw_gauge(colors, output_dir)
 
 
 def draw_background(colors: Colors, output_file: Path):
@@ -80,6 +81,118 @@ def draw_background(colors: Colors, output_file: Path):
         with Image(width=1920, height=1080, pseudo="xc:transparent") as image:
             draw.draw(image)
             image.save(filename=output_file)
+
+
+def draw_gauge(colors, output_dir: Path):
+    # base y = 204
+    image_width = 1920
+    image_height = 78
+    with Drawing() as draw:
+        y = 33
+        draw.stroke_color = colors.none
+        draw.fill_color = colors.black
+        draw_rounded_rectangle_top_left(draw, 0, y, image_width, image_height - y, 12)
+
+        with Image(width=image_width, height=image_height, pseudo="xc:transparent") as image:
+            draw.draw(image)
+            image.save(filename=output_dir / "gauge_left_base.png")
+
+    with Drawing() as draw:
+        draw.stroke_color = colors.none
+        draw.fill_color = colors.black
+        draw_rounded_rectangle_top_left(draw, 0, 0, image_width, image_height, 24)
+
+        with Image(width=image_width, height=image_height, pseudo="xc:transparent") as image:
+            draw.draw(image)
+            image.save(filename=output_dir / "gauge_right_base.png")
+
+    n = 50
+    w = 15
+    dw = 6
+    image_width = (w + dw) * n - dw
+
+    bottom = 249 + 33 - 204
+
+    with Drawing() as draw:
+        y = 250.5 - 204
+        h = bottom - y
+
+        draw.stroke_color = colors.none
+        draw.fill_color = colors.get_color("#5C0000")
+        draw.rectangle(0, y, width=image_width - 1, height=h - 1)
+        draw.fill_color = colors.get_color("#4D0000")
+        for i in range(n - 1):
+            x = (w + dw) * (i + 1) - dw
+            draw.rectangle(x, y, width=dw - 1, height=h - 1)
+
+        with Image(width=image_width, height=image_height, pseudo="xc:transparent") as image:
+            draw.draw(image)
+            image.save(filename=output_dir / "gauge_left_dark.png")
+
+    with Drawing() as draw:
+        y = 249 - 204
+        h = bottom - y
+        dh = 4.5
+
+        draw.stroke_color = colors.none
+        draw.fill_color = colors.get_color("#e01f00")
+        draw.rectangle(0, y, width=image_width - 1, height=h - 1)
+        draw.fill_color = colors.get_color("#FFFFFF90")
+        draw.rectangle(0, y, width=image_width - 1, height=dh - 1)
+        for i in range(n - 1):
+            x = (w + dw) * (i + 1) - dw
+            draw.fill_color = colors.get_color("#ad2a00")
+            draw.rectangle(x, y, width=dw - 1, height=h - 1)
+            draw.fill_color = colors.get_color("#FFFFFF70")
+            draw.rectangle(x, y, width=dw - 1, height=dh - 1)
+
+        with Image(width=image_width, height=image_height, pseudo="xc:transparent") as image:
+            draw.draw(image)
+            image.save(filename=output_dir / "gauge_left_red.png")
+
+    with Drawing() as draw:
+        y = 216 - 204
+        h = bottom - y
+
+        draw.stroke_color = colors.none
+        draw.fill_color = colors.get_color("#635000")
+        draw_rounded_rectangle_top_left(draw, 0, y, image_width, h, 12)
+        draw.fill_color = colors.get_color("#493400")
+        for i in range(n - 1):
+            x = (w + dw) * (i + 1) - dw
+            draw.rectangle(x, y, width=dw - 1, height=h - 1)
+
+        with Image(width=image_width, height=image_height, pseudo="xc:transparent") as image:
+            draw.draw(image)
+            image.save(filename=output_dir / "gauge_right_dark.png")
+
+    with Drawing() as draw:
+        y = 216 - 204
+        h = bottom - y
+        r = 12
+        dh = 4.5
+
+        draw.stroke_color = colors.none
+        draw.fill_color = colors.get_color("#FFFFFF")
+        draw_rounded_rectangle_top_left(draw, 0, y, image_width, h, r)
+        draw.fill_color = colors.get_color("#FEFF03")
+        draw_rounded_rectangle_top_left(draw, 0, y + dh, image_width, h - dh, r)
+        draw.fill_color = colors.get_color("#00000040")
+        for i in range(n - 1):
+            x = (w + dw) * (i + 1) - dw
+            draw.rectangle(x, y, width=dw - 1, height=h - 1)
+
+        with Image(width=image_width, height=image_height, pseudo="xc:transparent") as image:
+            draw.draw(image)
+            image.save(filename=output_dir / "gauge_right_yellow.png")
+
+
+def draw_rounded_rectangle_top_left(draw: Drawing, left: float, top: float, width: float, height: float, radius: float):
+    draw.rectangle(left, top + radius, left + width - 1, top + height - 1)
+    draw.rectangle(left + radius, top, left + width - 1, top + height - 1)
+    draw.circle((left + radius, top + radius), (left + radius, top))
+    # draw.ellipse((left+radius, top+radius), (radius, radius), (270, 360))
+    # draw.arc((left, top), (left+radius*2, top+radius*2), (270, 360))
 
 
 def draw_note(colors: Colors, output_file: Path, is_don: bool, is_large: bool):
