@@ -246,7 +246,6 @@ def draw_renda(colors: Colors, output_dir: Path, is_large: bool):
 
             with image.clone() as shadow_layer:
                 shadow_layer.background_color = colors.black
-                shadow_layer.background_color = colors.black
                 shadow_layer.shadow(80, 2, 2, 2)
 
                 image.composite(shadow_layer, operator="dst_over")
